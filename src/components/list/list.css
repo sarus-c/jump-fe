@@ -1,0 +1,18 @@
+.thumb {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: calc(var(--bs-gutter-x) / 2 * -1);
+  right: calc(var(--bs-gutter-x) / 2 * -1);
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
