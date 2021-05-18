@@ -98,7 +98,7 @@ const List = ({
       termIds.indexOf(x._id) > -1 ? `${x.url}##${x._id}` : null
     );
 
-    handleScraping(termsUrl);
+    handleScraping(termsUrl.filter(Boolean));
   };
 
   const handleScraping = (urls: string[]) => {
