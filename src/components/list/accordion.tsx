@@ -4,12 +4,16 @@ import Item from "./item";
 
 const Accordion = ({
   list,
+  termIds,
   handleDelete,
   handleScraping,
+  handleCheckCollector
 }: {
   list: any;
+  termIds: string[];
   handleDelete: (id: string, item: string) => void;
-  handleScraping: (id: string) => void;
+  handleScraping: (ids: string[]) => void;
+  handleCheckCollector: (e:any) => void;
 }) => {
   const [show, setShow] = useState("");
 
@@ -25,10 +29,19 @@ const Accordion = ({
             >
               {decodeURI(x.title)}
             </button>
+            <div className="accordion-checkbox">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value={x._id}
+                onChange={handleCheckCollector}
+                checked={termIds.indexOf(x._id) > -1}
+              />
+            </div>
             <button
               type="button"
               className="btn"
-              onClick={() => handleDelete(x._id, 'list')}
+              onClick={() => handleDelete(x._id, "list")}
             >
               <Icon icon="trash" />
             </button>
@@ -52,7 +65,7 @@ const Accordion = ({
                 {x.items.length < 1 && (
                   <button
                     type="button"
-                    onClick={() => handleScraping(x._id)}
+                    onClick={() => handleScraping([x._id])}
                     className="btn btn-success w-25 m-auto"
                   >
                     Scrap the web 😁

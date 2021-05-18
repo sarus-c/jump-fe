@@ -15,6 +15,7 @@ const List = ({
   const [list, setList] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [termIds, setTermIds] = useState<string[]>([]);
 
   const getData = (loading: boolean) => {
     if (loading) setLoading(true);
@@ -39,6 +40,24 @@ const List = ({
         console.log("There was an error!", error);
       });
   };
+
+  const handleCheckCollector = useCallback(
+    (e) => {
+      const terms = new Set(termIds);
+      const el = e.target;
+
+      if (el.checked) {
+        terms.add(el.value);
+      } else {
+        terms.delete(el.value);
+      }
+      const termsArr = Array.from(terms);
+
+      setTermIds(termsArr);
+      console.log(termsArr);
+    },
+    [termIds]
+  );
 
   const handleError = useCallback(() => {
     setError(false);
@@ -74,25 +93,33 @@ const List = ({
     [handleInfo]
   );
 
-  const handleScraping = (id: string) => {
+  const handleCollectors = () => {
+    const termsUrl = list.searches.map((x: any) =>
+      termIds.indexOf(x._id) > -1 ? `${x.url}##${x._id}` : null
+    );
+
+    handleScraping(termsUrl);
+  };
+
+  const handleScraping = (urls: string[]) => {
     setLoading(true);
 
-    fetch(`${process.env.REACT_APP_API_SCRAP}/${id}`, {
-      method: "GET"
+    fetch(`${process.env.REACT_APP_API_SCRAP}`, {
+      method: "POST",
+      body: JSON.stringify({ search_urls: urls }),
     })
       .then(async (response) => {
-        console.log(response)
-        const data = await response.json();
+        // const data = await response.json();
 
         // check for error response
         if (!response.ok) {
-          // get error message from body or default to response status
-          const error = (data && data.message) || response.status;
-          return Promise.reject(error);
+          setError(true);
+        } else {
+          handleInfo();
         }
 
-        handleInfo();
         setLoading(false);
+        setTermIds([])
       })
       .catch((error) => {
         setError(true);
@@ -106,10 +133,10 @@ const List = ({
 
   useEffect(() => {
     if (reload) {
-      setLoading(true)
+      setLoading(true);
       getData(false);
     } else {
-      setLoading(false)
+      setLoading(false);
     }
   }, [reload]);
 
@@ -123,11 +150,26 @@ const List = ({
       )}
       {list.count === 0 && !loading && !error && <NoItems />}
       {list.count > 0 && !error && (
-        <Accordion
-          list={list}
-          handleDelete={handleDelete}
-          handleScraping={handleScraping}
-        />
+        <>
+          {termIds.length > 0 && (
+            <div className="d-flex justify-content-end">
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleCollectors}
+              >
+                Run collector for selected terms
+              </button>
+            </div>
+          )}
+          <Accordion
+            list={list}
+            termIds={termIds}
+            handleDelete={handleDelete}
+            handleScraping={handleScraping}
+            handleCheckCollector={handleCheckCollector}
+          />
+        </>
       )}
     </>
   );
