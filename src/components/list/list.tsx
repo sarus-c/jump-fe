@@ -166,7 +166,6 @@ const List = ({
             list={list}
             termIds={termIds}
             handleDelete={handleDelete}
-            handleScraping={handleScraping}
             handleCheckCollector={handleCheckCollector}
           />
         </>

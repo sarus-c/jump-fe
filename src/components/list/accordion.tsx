@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import Icon from "../icon";
+import Info from "../info";
 import Item from "./item";
 
 const Accordion = ({
   list,
   termIds,
   handleDelete,
-  handleScraping,
   handleCheckCollector
 }: {
   list: any;
   termIds: string[];
   handleDelete: (id: string, item: string) => void;
-  handleScraping: (ids: string[]) => void;
   handleCheckCollector: (e:any) => void;
 }) => {
   const [show, setShow] = useState("");
@@ -63,13 +62,7 @@ const Accordion = ({
                     />
                   ))}
                 {x.items.length < 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleScraping([x._id])}
-                    className="btn btn-success w-25 m-auto"
-                  >
-                    Scrap the web 😁
-                  </button>
+                  <Info msg={'No items for this search term'} />
                 )}
               </div>
             </div>
