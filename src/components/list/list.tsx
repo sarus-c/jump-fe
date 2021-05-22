@@ -119,7 +119,7 @@ const List = ({
         }
 
         setLoading(false);
-        setTermIds([])
+        setTermIds([]);
       })
       .catch((error) => {
         setError(true);
@@ -151,17 +151,17 @@ const List = ({
       {list.count === 0 && !loading && !error && <NoItems />}
       {list.count > 0 && !error && (
         <>
-          {termIds.length > 0 && (
-            <div className="d-flex justify-content-end">
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleCollectors}
-              >
-                Run collector for selected terms
-              </button>
-            </div>
-          )}
+          <div className="d-flex justify-content-end">
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={handleCollectors}
+              disabled={termIds.length < 1}
+            >
+              Run collector for selected terms
+            </button>
+          </div>
+
           <Accordion
             list={list}
             termIds={termIds}
