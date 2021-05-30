@@ -1,0 +1,7 @@
+applications:
+- name: Jump-FE
+  routes:
+  - route: jump.cert.cfapps.eu10.hana.ondemand.com
+  docker:
+    image: santohi/jumpfe:latest
+    username: santohi
